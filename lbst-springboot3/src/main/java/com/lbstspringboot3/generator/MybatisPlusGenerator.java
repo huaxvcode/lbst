@@ -2,12 +2,14 @@ package com.lbstspringboot3.generator;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
+import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class MybatisPlusGenerator {
 
@@ -26,7 +28,7 @@ public class MybatisPlusGenerator {
 		                 // 全局配置
 		                 .globalConfig((scanner, builder) -> {
 			                 builder.author("林日清")
-			                        .outputDir("src\\main\\java");
+			                        .disableOpenDir(); // 不允许自动打开目录
 		                 })
 		                 // 包配置
 		                 .packageConfig((scanner, builder) -> {
@@ -35,8 +37,13 @@ public class MybatisPlusGenerator {
 			                        .mapper("mapper")
 			                        .service("service")
 			                        .serviceImpl("service.impl")
-			                        .xml("mapper.xml")
-			                        .controller("controller");
+			                        .xml("mapper")
+			                        .pathInfo(Map.of(
+					                        OutputFile.entity, "src/main/java/com/lbstspringboot3/entity",
+					                        OutputFile.mapper, "src/main/java/com/lbstspringboot3/mapper",
+					                        OutputFile.xml, "src/main/resources/mapper",
+					                        OutputFile.service, "src/main/java/com/lbstspringboot3/service",
+					                        OutputFile.serviceImpl, "src/main/java/com/lbstspringboot3/service/impl"));
 		                 })
 		                 // 策略配置
 		                 .strategyConfig((scanner, builder) -> builder.addInclude(getTables(scanner.apply("请输入表名，多个英文逗号分隔？所有输入 all")))

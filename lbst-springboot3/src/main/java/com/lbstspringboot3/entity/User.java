@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * <p>
@@ -19,7 +18,6 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -31,9 +29,9 @@ public class User implements Serializable {
 	private Integer id;
 
 	/**
-	 * 用户电话
+	 * 用户名
 	 */
-	private String phone;
+	private String username;
 
 	/**
 	 * 用户密码

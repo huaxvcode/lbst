@@ -77,19 +77,46 @@
             <version>1.38.0</version>
         </dependency>
 
+        <!--bcrypt 密码加密-->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!--生成验证码-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.26</version>
+        </dependency>
+
+        <!--redis 依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+
 
     </dependencies>
 
     <build>
-        <resources>
-            <!--指明在 src/main/java 目录下的 xml 文件也能被构建工具扫描到-->
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

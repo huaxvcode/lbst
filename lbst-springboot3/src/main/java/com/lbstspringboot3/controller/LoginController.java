@@ -1,5 +1,6 @@
 package com.lbstspringboot3.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
@@ -42,8 +43,8 @@ public class LoginController {
 		// 设置过期时间 5 分钟
 		//redisUtil.set(key, code, 60 * 5);
 
-		// 设置过期时间 30 天
-		redisUtil.set(key, code, 60 * 60 * 24 * 30);
+		// 设置过期时间 1 天
+		redisUtil.set(key, code, 60 * 60 * 24);
 
 		// 设置响应头中包含 key
 		response.setHeader("Captcha-Key", key);
@@ -66,23 +67,25 @@ public class LoginController {
 		String code = params.get("code").toLowerCase();
 
 		if (!redisUtil.hasKey(key)) {
-			return SaResult.error("请输入验证码");
+			return SaResult.error("请输入验证码").setData(Map.of("status", 3));
 		}
 
 		String captcha = ((String) redisUtil.get(key)).toLowerCase();
 
 		if (!code.equals(captcha)) {
-			return SaResult.error("请输入正确的验证码");
+			return SaResult.error("请输入正确的验证码").setData(Map.of("status", 2));
 		}
 
 		short status = userService.checkLogin(user);
 
 		if (status == 1) {
-			return SaResult.ok("登录成功");
+			return SaResult.ok("登录成功").setData(Map.of("token", StpUtil.getTokenInfo(),
+			                                              "status", 0));
 		} else if (status == 2) {
-			return SaResult.ok("无需重复登录");
+			return SaResult.ok("无需重复登录").setData(Map.of("token", StpUtil.getTokenInfo(),
+			                                                  "status", 0));
 		} else {
-			return SaResult.error("用户名或密码错误");
+			return SaResult.error("用户名或密码错误").setData(Map.of("status", 1));
 		}
 	}
 
@@ -103,21 +106,27 @@ public class LoginController {
 		String code = params.get("code");
 
 		if (!redisUtil.hasKey(key)) {
-			return SaResult.error("请输入验证码");
+			return SaResult.error("请输入验证码").setData(4);
 		}
 
 		if (!code.equals(redisUtil.get(key))) {
-			return SaResult.error("请输入正确的验证码");
+			return SaResult.error("请输入正确的验证码").setData(3);
 		}
 
 		short status = userService.reg(user);
 
 		if (status == 1) {
-			return SaResult.ok("注册成功");
+			return SaResult.ok("注册成功").setData(0);
 		} else if (status == 2) {
-			return SaResult.error("用户名已被占用");
+			return SaResult.error("用户名已被占用").setData(2);
 		} else {
-			return SaResult.error("用户名或者密码的格式不正确");
+			return SaResult.error("用户名或者密码的格式不正确").setData(1);
 		}
+	}
+
+	@GetMapping("/logout")
+	public SaResult logout() {
+		StpUtil.logout();
+		return SaResult.ok("登出成功");
 	}
 }

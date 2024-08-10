@@ -14,3 +14,8 @@ export function logout() {
 export function reg(data) {
     return axios.post('/reg', data)
 }
+
+// 判断当前是否处于登录状态
+export function checkLoginStatus() {
+    return axios.get('/check-login-status');
+}

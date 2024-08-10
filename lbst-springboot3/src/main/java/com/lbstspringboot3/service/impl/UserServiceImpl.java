@@ -2,11 +2,11 @@ package com.lbstspringboot3.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lbstspringboot3.common.PasswordEncoder;
 import com.lbstspringboot3.entity.User;
 import com.lbstspringboot3.mapper.UserMapper;
 import com.lbstspringboot3.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lbstspringboot3.utils.PasswordEncoder;
 import com.lbstspringboot3.utils.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

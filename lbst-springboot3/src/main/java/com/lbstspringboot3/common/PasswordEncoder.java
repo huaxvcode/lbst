@@ -1,4 +1,4 @@
-package com.lbstspringboot3.utils;
+package com.lbstspringboot3.common;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Component;

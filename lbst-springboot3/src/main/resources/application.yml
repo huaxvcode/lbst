@@ -7,6 +7,12 @@ spring:
   application:
     name: lbst-springboot3
 
+  servlet:
+    multipart:
+      max-file-size: 100MB     # 设置上传的最大大小
+      max-request-size: 100MB  # 设置请求的最大大小
+
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root

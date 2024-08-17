@@ -1,8 +1,9 @@
 import axios from "axios";
 import router from '../router'
 import { ElMessageBox } from "element-plus";
+import { getBaseUrl } from "./base";
 
-const baseUrl = "http://localhost:8090"
+const baseUrl = getBaseUrl()
 
 const req = axios.create({
     baseURL: baseUrl,

@@ -108,4 +108,15 @@ public class LocalStorage {
     } else
       return null;
   }
+
+  /**
+   * 删除图片
+   *
+   * @param name 图片名称
+   */
+  public boolean delHeadImg(String name) {
+    if (name != null && !name.isEmpty())
+      return FileUtil.del(this.localImgPath(name));
+    return false;
+  }
 }

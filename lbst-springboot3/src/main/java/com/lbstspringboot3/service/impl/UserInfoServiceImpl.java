@@ -35,13 +35,18 @@ public class UserInfoServiceImpl
 
   @Override
   public boolean saveHeadImg(Integer uid, MultipartFile file) {
-    UserInfo ui = this.getById(uid);
+    UserInfo ui = this.getByUid(uid);
     if (ui == null)
       ui = new UserInfo();
     ui.setUid(uid);
     String name = localStorage.saveImg(file);
     if (name == null) {
       return false;
+    }
+    if (localStorage.delHeadImg(ui.getHeadImg())) {
+      System.out.println("=========================================");
+      System.out.println("文件删除成功");
+      System.out.println("=========================================");
     }
     ui.setHeadImg(name);
     this.saveOrUpdate(ui);

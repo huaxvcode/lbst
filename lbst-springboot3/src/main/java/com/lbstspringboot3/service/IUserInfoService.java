@@ -49,4 +49,11 @@ public interface IUserInfoService extends IService<UserInfo> {
    * @param uid 用户id
    */
   UserInfo getUserInfoByUid(Integer uid);
+
+  /**
+   * 通过 uid 保存用户信息
+   *
+   * @param uid 用户id
+   */
+  boolean saveOrUpdateByUid(Integer uid, UserInfo userInfo);
 }

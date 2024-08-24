@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lbstspringboot3.mapper.BookMapper">
+<select id="getBookList" resultType="Map">
+  select b.id, b.name, bt.type typeId, b.time, b.nums, b.price
+  from book b
+  left join book_type bt
+  on b.type_id = bt.id
+  <where>
+    <if test="keyWord != null">
+      b.name like concat('%', #{keyWord}, '%')
+    </if>
+    <if test="bookTypeId != -1">
+      and bt.id = #{bookTypeId}
+    </if>
+  </where>
+  order by b.time desc
+</select>
+</mapper>

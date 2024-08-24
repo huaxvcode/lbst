@@ -4,7 +4,9 @@ import cn.dev33.satoken.context.model.SaRequest;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.lbstspringboot3.common.LocalStorage;
+import com.lbstspringboot3.entity.UserInfo;
 import com.lbstspringboot3.service.IUserInfoService;
+import com.lbstspringboot3.service.IUserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.websocket.server.PathParam;
 import java.io.OutputStream;
@@ -56,5 +58,14 @@ public class PersonController {
   @GetMapping("/user-info/{uid}")
   public SaResult getUserInfo(@PathVariable Integer uid) {
     return SaResult.ok().setData(userInfoService.getUserInfoByUid(uid));
+  }
+
+  @PostMapping("/user-info/{uid}")
+  public SaResult updateUserInfo(@PathVariable Integer uid,
+                                 @RequestBody UserInfo userInfo) {
+    if (userInfoService.saveOrUpdateByUid(uid, userInfo)) {
+      return SaResult.ok("保存成功");
+    }
+    return SaResult.error("信息更新失败");
   }
 }

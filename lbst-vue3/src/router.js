@@ -11,6 +11,7 @@ const routes = [
     {
         path: '/',
         component: () => import('./views/home/Home.vue'),
+        redirect: '/person-center',
         children: [
             {
                 path: 'person-center',

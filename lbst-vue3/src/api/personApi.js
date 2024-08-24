@@ -1,5 +1,5 @@
 import req from "../utils/request"
-
+import { getBaseUrl } from "../utils/base";
 
 export async function getHeadImgUrl(name) {
   const resp = await req.get(`/head-img/${name}`, {
@@ -62,3 +62,15 @@ export async function flushHeadImg() {
     });
   return url;
 };
+
+export function getUsername(uid) {
+  return req.get(`/username/${uid}`);
+}
+
+export function getHeadImgUploadUrl() {
+  return getBaseUrl() + "/upload/head-img";
+};
+
+export function saveOrUpdateUserInfo(uid, userInfo) {
+  return req.post(`/user-info/${uid}`, userInfo);
+}

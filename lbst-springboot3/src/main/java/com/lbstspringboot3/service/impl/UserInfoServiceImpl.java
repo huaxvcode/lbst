@@ -74,4 +74,19 @@ public class UserInfoServiceImpl
     }
     return res;
   }
+
+  @Override
+  public boolean saveOrUpdateByUid(Integer uid, UserInfo userInfo) {
+    UserInfo ui = getUserInfoByUid(uid);
+    if (userInfo.getNickName() != null) {
+      ui.setNickName(userInfo.getNickName());
+    }
+    if (userInfo.getYearOfBirth() != null) {
+      ui.setYearOfBirth(userInfo.getYearOfBirth());
+    }
+    if (userInfo.getEducation() != null) {
+      ui.setEducation(userInfo.getEducation());
+    }
+    return this.saveOrUpdate(ui);
+  }
 }

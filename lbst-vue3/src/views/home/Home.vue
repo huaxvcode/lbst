@@ -5,6 +5,7 @@ import { ref } from "vue";
 import router from "../../router.js";
 import { getUserInfo, getHeadImgUrl } from "../../api/personApi.js";
 import { getBaseUrl, getHeaders } from "../../utils/base.js";
+import { getRoleByUid } from "../../api/userApi.js";
 
 const asideWidth = ref(250);
 
@@ -35,6 +36,19 @@ let activeNames = ref(["0"]);
 
 // 角色类型：0->超级管理员、1->管理员、2->普通用户
 let role = ref(1);
+
+const flushRole = () => {
+  let uid = localStorage.getItem("userId");
+  getRoleByUid(uid).then((res) => {
+    if (res == null || res.code != 200) {
+      ElMessage.error("角色权限获取失败");
+    } else {
+      role.value = res.data;
+    }
+  });
+};
+
+flushRole();
 
 const asideTag = [
   {

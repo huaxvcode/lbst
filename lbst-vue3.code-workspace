@@ -1,19 +1,28 @@
 {
 	"folders": [
-		{
-			"path": "lbst-vue3"
-		},
-		{
-			"path": "lbst-springboot3"
-		},
-		{
-			"path": "../../Desktop/spring-boot-admin-master"
-		},
-		{
-			"path": "../../Desktop/spring-boot-vue-master"
-		}
-	],
+    {
+      "name": "ACM",
+      "path": "../ACM"
+    },
+    {
+      "name": "lbst-vue3",
+      "path": "lbst-vue3"
+    },
+    {
+      "name": "lbst-springboot3",
+      "path": "lbst-springboot3"
+    },
+    {
+      "name": "spring-boot-admin-master",
+      "path": "../../Desktop/spring-boot-admin-master"
+    },
+    {
+      "name": "spring-boot-vue-master",
+      "path": "../../Desktop/spring-boot-vue-master"
+    }
+  ],
 	"settings": {
-		"java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive"
 	}
 }

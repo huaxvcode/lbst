@@ -1,35 +1,37 @@
 <template>
   <div class="book">
     <div class="button">
-      <el-button type="danger" @click="deleteSelect">批量删除</el-button>
-      <el-button type="primary" @click="onAddItem">新增</el-button>
-      <el-input v-model="keyword" placeholder="搜索" class="search-input" />
-
-      <el-select v-model="selectKey" style="width: 8rem; padding-left: 0.6rem">
+      <el-button type="danger" @click="deleteSelect" v-if="roleType < 2">批量删除</el-button>
+      <el-button type="primary" @click="onAddItem" v-if="roleType < 2">新增</el-button>
+      <el-input v-model="keyword" placeholder="搜索" class="search-input"/>
+      <el-select v-model="selectKey" style="width: 8rem; padding-right: 0.6rem">
         <el-option
-          v-for="item in selectList"
-          :key="item.id"
-          :label="item.type"
-          :value="item.type"
+            v-for="item in selectList"
+            :key="item.id"
+            :label="item.type"
+            :value="item.type"
         />
       </el-select>
 
       <el-button type="primary" @click="searchClick">搜索</el-button>
+      <el-button type="warning" @click="borrowClick">借阅</el-button>
+
+
     </div>
     <el-table
-      ref="multipleTableRef"
-      :data="tableData"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
+        ref="multipleTableRef"
+        :data="tableData"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" fixed="left" width="55" />
+      <el-table-column type="selection" fixed="left" width="55"/>
       <el-table-column fixed="left" label="书名">
         <template #default="scope">
           <template v-if="isEdit != scope.$index">
             {{ scope.row.name }}
           </template>
           <template v-else>
-            <el-input v-model="inputData.name" />
+            <el-input v-model="inputData.name"/>
           </template>
         </template>
       </el-table-column>
@@ -41,10 +43,10 @@
           <template v-else>
             <el-select v-model="inputData.typeId">
               <el-option
-                v-for="item in bookTypeList"
-                :key="item.id"
-                :label="item.type"
-                :value="item.type"
+                  v-for="item in bookTypeList"
+                  :key="item.id"
+                  :label="item.type"
+                  :value="item.type"
               />
             </el-select>
           </template>
@@ -57,9 +59,9 @@
           </template>
           <template v-else>
             <el-date-picker
-              v-model="inputData.time"
-              type="datetime"
-              :shortcuts="shortcuts"
+                v-model="inputData.time"
+                type="datetime"
+                :shortcuts="shortcuts"
             />
           </template>
         </template>
@@ -70,7 +72,7 @@
             {{ scope.row.nums }}
           </template>
           <template v-else>
-            <el-input v-model="inputData.nums" />
+            <el-input v-model="inputData.nums"/>
           </template>
         </template>
       </el-table-column>
@@ -80,31 +82,31 @@
             {{ scope.row.price }}
           </template>
           <template v-else>
-            <el-input v-model="inputData.price" />
+            <el-input v-model="inputData.price"/>
           </template>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="150">
         <template #default="scope">
           <el-button
-            size="small"
-            @click="handleEdit(scope.$index, scope.row)"
-            v-if="isEdit != scope.$index"
+              size="small"
+              @click="handleEdit(scope.$index, scope.row)"
+              v-if="isEdit != scope.$index"
           >
             Edit
           </el-button>
           <template v-else>
             <el-button
-              size="small"
-              type="primary"
-              @click="handleUpdate(scope.$index, scope.row)"
+                size="small"
+                type="primary"
+                @click="handleUpdate(scope.$index, scope.row)"
             >
               确定
             </el-button>
             <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
+                size="small"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
             >
               取消
             </el-button>
@@ -114,29 +116,25 @@
     </el-table>
     <div class="demo-pagination-block">
       <el-pagination
-        v-model:current-page="page"
-        v-model:page-size="pageSize"
-        :page-sizes="[10, 15, 20]"
-        :size="size"
-        :disabled="disabled"
-        :background="background"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
+          v-model:current-page="page"
+          v-model:page-size="pageSize"
+          :page-sizes="[10, 15, 20]"
+          :size="size"
+          :disabled="disabled"
+          :background="background"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, watch, watchEffect } from "vue";
-import {
-  deleteByIdList,
-  getBookList,
-  getBookType,
-  saveOrUpdate,
-} from "../../api/BookApi";
-import { ElMessage } from "element-plus";
-import { dateFormat } from "../../utils/timeFormat";
+import {reactive, ref, watch} from "vue";
+import {deleteByIdList, getBookList, getBookType, saveOrUpdate,} from "../../api/BookApi";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {dateFormat} from "../../utils/timeFormat";
+import {getRoleByUid} from "../../api/userApi.js";
 
 const multipleTableRef = ref();
 const list = ref([]);
@@ -153,23 +151,23 @@ const onAddItem = () => {
     return;
   }
   tableData.value.unshift({
-    id: null,
-    name: "",
-    typeId: "",
-    time: "",
-    nums: "",
-    price: "",
-  });
+                            id: null,
+                            name: "",
+                            typeId: "",
+                            time: "",
+                            nums: "",
+                            price: "",
+                          });
   isEdit.value = 0;
 };
 
 const inputData = reactive({
-  name: "",
-  typeId: "",
-  time: "",
-  nums: "",
-  price: "",
-});
+                             name: "",
+                             typeId: "",
+                             time: "",
+                             nums: "",
+                             price: "",
+                           });
 
 const clearInputData = () => {
   inputData.name = "";
@@ -193,11 +191,11 @@ const handleEdit = (index, row) => {
 
 const bookTypeList = ref([]);
 const selectList = ref([
-  {
-    id: "-1",
-    type: "全部",
-  },
-]);
+                         {
+                           id: "-1",
+                           type: "全部",
+                         },
+                       ]);
 
 getBookType().then((res) => {
   if (res == null || res.code != 200) {
@@ -206,9 +204,9 @@ getBookType().then((res) => {
     bookTypeList.value = res.data;
     selectList.value = [];
     selectList.value.push({
-      id: "-1",
-      type: "全部",
-    });
+                            id: "-1",
+                            type: "全部",
+                          });
     res.data.forEach((item, value) => {
       selectList.value.push(item);
     });
@@ -235,11 +233,11 @@ const handleUpdate = (index, row) => {
   }
 
   if (
-    !(
-      inputData.nums == "0" ||
-      /^[1-9][0-9]*$/.test(inputData.price) ||
-      /^[0-9]+\.[0-9]{0,2}$/.test(inputData.price)
-    )
+      !(
+          inputData.nums == "0" ||
+          /^[1-9][0-9]*$/.test(inputData.price) ||
+          /^[0-9]+\.[0-9]{0,2}$/.test(inputData.price)
+      )
   ) {
     ElMessage.error("价格异常");
     return;
@@ -274,9 +272,9 @@ const handleUpdate = (index, row) => {
       ElMessage.error("修改失败！");
     } else {
       ElMessage({
-        message: "修改成功",
-        type: "success",
-      });
+                  message: "修改成功",
+                  type: "success",
+                });
       isEdit.value = -1;
       clearInputData();
       window.location.reload();
@@ -306,29 +304,29 @@ const pageList = ref([]);
 const selectKey = ref("全部");
 
 watch(
-  [page, pageSize],
-  (newData, oldData) => {
-    getBookList(
-      page.value,
-      pageSize.value,
-      keyword.value,
-      getBookTypeId(selectKey.value)
-    ).then((res) => {
-      if (res == null || res.code != 200) {
-        ElMessage.error("信息获取失败");
-      } else {
-        total.value = res.data.total;
-        pageList.value = res.data.list;
-        pageList.value.forEach((item) => {
-          item.time = item.time.replace("T", " ");
-        });
-        tableData.value = pageList.value;
-      }
-    });
-  },
-  {
-    immediate: true,
-  }
+    [page, pageSize],
+    (newData, oldData) => {
+      getBookList(
+          page.value,
+          pageSize.value,
+          keyword.value,
+          getBookTypeId(selectKey.value)
+      ).then((res) => {
+        if (res == null || res.code != 200) {
+          ElMessage.error("信息获取失败");
+        } else {
+          total.value = res.data.total;
+          pageList.value = res.data.list;
+          pageList.value.forEach((item) => {
+            item.time = item.time.replace("T", " ");
+          });
+          tableData.value = pageList.value;
+        }
+      });
+    },
+    {
+      immediate: true,
+    }
 );
 
 const deleteSelect = () => {
@@ -337,25 +335,26 @@ const deleteSelect = () => {
     cancelButtonText: "取消",
     type: "warning",
   })
-    .then(() => {
-      let idList = [];
-      list.value.forEach((value, index) => {
-        idList.push(value.id);
-      });
-      // console.log(idList);
-      deleteByIdList(idList).then((res) => {
-        if (res) {
-          ElMessage({
-            type: "success",
-            message: "删除成功",
-          });
-          window.location.reload();
-        } else {
-          ElMessage.error("删除失败，请联系后端人员");
-        }
-      });
-    })
-    .catch(() => {});
+              .then(() => {
+                let idList = [];
+                list.value.forEach((value, index) => {
+                  idList.push(value.id);
+                });
+                // console.log(idList);
+                deleteByIdList(idList).then((res) => {
+                  if (res) {
+                    ElMessage({
+                                type: "success",
+                                message: "删除成功",
+                              });
+                    window.location.reload();
+                  } else {
+                    ElMessage.error("删除失败，请联系后端人员");
+                  }
+                });
+              })
+              .catch(() => {
+              });
 };
 
 const searchClick = () => {
@@ -366,10 +365,10 @@ const searchClick = () => {
     keyword.value = null;
   }
   getBookList(
-    page.value,
-    pageSize.value,
-    keyword.value,
-    getBookTypeId(selectKey.value)
+      page.value,
+      pageSize.value,
+      keyword.value,
+      getBookTypeId(selectKey.value)
   ).then((res) => {
     if (res == null || res.code != 200) {
       ElMessage.error("信息获取失败");
@@ -382,6 +381,39 @@ const searchClick = () => {
       tableData.value = pageList.value;
     }
   });
+};
+
+const roleType = ref(2);
+const userId = localStorage.getItem("userId");
+
+getRoleByUid(userId).then(res => {
+  if (res == null || res.code != 200) {
+    ElMessage.error("获取用户角色类型失败");
+    return;
+  }
+  roleType.value = res.data;
+})
+
+const borrowClick = () => {
+  if (list.value.length > 1) {
+    ElMessage.error("用户每次最多只能借一本书籍！");
+    return;
+  }
+  if (list.value.length == 0) {
+    ElMessage.error("请选择需要借阅的书籍！");
+    return;
+  }
+  ElMessageBox.confirm(
+      '确定借阅吗？',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  ).then(() => {
+
+  }).catch(() => {})
 };
 
 // setInterval(() => {

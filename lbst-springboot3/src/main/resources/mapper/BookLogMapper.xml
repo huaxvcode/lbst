@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lbstspringboot3.mapper.BookLogMapper">
-
+    <select id="getBookLogList" resultType="map">
+        select a.id,
+               a.book_id as bookId,
+               c.name    as bookName,
+               a.content,
+               a.uid,
+               b.username,
+               a.time
+        from book_log as a
+                 inner join user as b on a.uid = b.id
+                 inner join book as c on a.book_id = c.id
+        order by a.time desc
+    </select>
 </mapper>

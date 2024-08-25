@@ -1,11 +1,14 @@
 package com.lbstspringboot3.mapper;
 
-import com.lbstspringboot3.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lbstspringboot3.entity.User;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author 林日清
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+	List<Map<String, Object>> getUserList();
 }

@@ -24,4 +24,6 @@ public interface IBookService extends IService<Book> {
 	boolean deleteByIdList(List<Integer> idList);
 
 	boolean borrow(Integer bookId);
+
+	Integer getByBookName(String name);
 }

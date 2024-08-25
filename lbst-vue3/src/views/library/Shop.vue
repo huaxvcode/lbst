@@ -1,11 +1,11 @@
 <template>
-    shop
+  shop
 </template>
 
 <script setup>
 
 </script>
 
-<script scope>
+<style scope>
 
-</script>
+</style>

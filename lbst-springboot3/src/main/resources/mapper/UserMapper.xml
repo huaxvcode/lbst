@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lbstspringboot3.mapper.UserMapper">
-
+    <select id="getUserList" resultType="Map">
+        select a.id            uid,
+               a.username      username,
+               b.nick_name     nickName,
+               b.head_img      headImg,
+               b.year_of_birth yearOfBirth,
+               b.education     education,
+               c.type          roleType
+        from user a
+                 left join user_info b on a.id = b.uid
+                 left join role c on a.id = c.uid
+        order by a.id
+    </select>
 </mapper>

@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lbstspringboot3.mapper.UserBookInfoMapper">
-
+    <select id="getBorrowListByUid" resultType="map">
+        select a.id,
+               b.name        bookName,
+               c.type        bookType,
+               a.time,
+               a.status,
+               a.return_time returnTime,
+               a.deadline
+        from user_book_info a
+                 inner join book b on a.book_id = b.id
+                 inner join book_type c on b.type_id = c.id
+    </select>
 </mapper>

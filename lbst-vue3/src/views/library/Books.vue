@@ -61,7 +61,7 @@
             <el-date-picker
                 v-model="inputData.time"
                 type="datetime"
-                :shortcuts="shortcuts"
+                :shortcuts="shortcuts()"
             />
           </template>
         </template>
@@ -131,7 +131,7 @@
 
 <script setup>
 import {reactive, ref, watch} from "vue";
-import {deleteByIdList, getBookList, getBookType, saveOrUpdate,} from "../../api/BookApi";
+import {borrow, deleteByIdList, getBookList, getBookType, saveOrUpdate} from "../../api/BookApi";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {dateFormat} from "../../utils/timeFormat";
 import {getRoleByUid} from "../../api/userApi.js";
@@ -151,23 +151,23 @@ const onAddItem = () => {
     return;
   }
   tableData.value.unshift({
-                            id: null,
-                            name: "",
-                            typeId: "",
-                            time: "",
-                            nums: "",
-                            price: "",
-                          });
+    id: null,
+    name: "",
+    typeId: "",
+    time: "",
+    nums: "",
+    price: "",
+  });
   isEdit.value = 0;
 };
 
 const inputData = reactive({
-                             name: "",
-                             typeId: "",
-                             time: "",
-                             nums: "",
-                             price: "",
-                           });
+  name: "",
+  typeId: "",
+  time: "",
+  nums: "",
+  price: "",
+});
 
 const clearInputData = () => {
   inputData.name = "";
@@ -191,11 +191,11 @@ const handleEdit = (index, row) => {
 
 const bookTypeList = ref([]);
 const selectList = ref([
-                         {
-                           id: "-1",
-                           type: "全部",
-                         },
-                       ]);
+  {
+    id: "-1",
+    type: "全部",
+  },
+]);
 
 getBookType().then((res) => {
   if (res == null || res.code != 200) {
@@ -204,9 +204,9 @@ getBookType().then((res) => {
     bookTypeList.value = res.data;
     selectList.value = [];
     selectList.value.push({
-                            id: "-1",
-                            type: "全部",
-                          });
+      id: "-1",
+      type: "全部",
+    });
     res.data.forEach((item, value) => {
       selectList.value.push(item);
     });
@@ -222,6 +222,76 @@ const getBookTypeId = (type) => {
     }
   });
   return res;
+};
+
+
+const handleDelete = (index, row) => {
+  isEdit.value = -1;
+  console.log(row);
+  clearInputData();
+  tableData.value.shift();
+};
+
+const shortcuts = () => {
+  return [
+    {
+      text: "当前时间",
+      value: new Date(),
+    },
+  ];
+};
+
+const total = ref(0);
+const page = ref(1);
+const pageSize = ref(10);
+const keyword = ref(null);
+const pageList = ref([]);
+const selectKey = ref("全部");
+
+watch(
+    [page, pageSize],
+    (newData, oldData) => {
+      getBookList(
+          page.value,
+          pageSize.value,
+          keyword.value,
+          getBookTypeId(selectKey.value),
+      ).then((res) => {
+        if (res == null || res.code != 200) {
+          ElMessage.error("信息获取失败");
+        } else {
+          total.value = res.data.total;
+          pageList.value = res.data.list;
+          pageList.value.forEach((item) => {
+            item.time = item.time.replace("T", " ");
+          });
+          tableData.value = pageList.value;
+        }
+      });
+    },
+    {
+      immediate: true,
+    },
+);
+
+const flushTable = () => {
+  getBookList(
+      page.value,
+      pageSize.value,
+      keyword.value,
+      getBookTypeId(selectKey.value),
+  ).then((res) => {
+    if (res == null || res.code != 200) {
+      ElMessage.error("信息获取失败");
+    } else {
+      total.value = res.data.total;
+      pageList.value = res.data.list;
+      pageList.value.forEach((item) => {
+        item.time = item.time.replace("T", " ");
+      });
+      tableData.value = pageList.value;
+    }
+  });
 };
 
 const handleUpdate = (index, row) => {
@@ -272,89 +342,40 @@ const handleUpdate = (index, row) => {
       ElMessage.error("修改失败！");
     } else {
       ElMessage({
-                  message: "修改成功",
-                  type: "success",
-                });
+        message: "修改成功",
+        type: "success",
+      });
       isEdit.value = -1;
       clearInputData();
-      window.location.reload();
+      flushTable();
     }
   });
 };
-
-const handleDelete = (index, row) => {
-  isEdit.value = -1;
-  console.log(row);
-  clearInputData();
-  tableData.value.shift();
-};
-
-const shortcuts = [
-  {
-    text: "当前时间",
-    value: new Date(),
-  },
-];
-
-const total = ref(0);
-const page = ref(1);
-const pageSize = ref(10);
-const keyword = ref(null);
-const pageList = ref([]);
-const selectKey = ref("全部");
-
-watch(
-    [page, pageSize],
-    (newData, oldData) => {
-      getBookList(
-          page.value,
-          pageSize.value,
-          keyword.value,
-          getBookTypeId(selectKey.value)
-      ).then((res) => {
-        if (res == null || res.code != 200) {
-          ElMessage.error("信息获取失败");
-        } else {
-          total.value = res.data.total;
-          pageList.value = res.data.list;
-          pageList.value.forEach((item) => {
-            item.time = item.time.replace("T", " ");
-          });
-          tableData.value = pageList.value;
-        }
-      });
-    },
-    {
-      immediate: true,
-    }
-);
 
 const deleteSelect = () => {
   ElMessageBox.confirm("确定删除吗？", "警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
-  })
-              .then(() => {
-                let idList = [];
-                list.value.forEach((value, index) => {
-                  idList.push(value.id);
-                });
-                // console.log(idList);
-                deleteByIdList(idList).then((res) => {
-                  if (res) {
-                    ElMessage({
-                                type: "success",
-                                message: "删除成功",
-                              });
-                    window.location.reload();
-                  } else {
-                    ElMessage.error("删除失败，请联系后端人员");
-                  }
-                });
-              })
-              .catch(() => {
-              });
+  }).then(() => {
+    let idList = [];
+    list.value.forEach((value, index) => {
+      idList.push(value.id);
+    });
+    // console.log(idList);
+    deleteByIdList(idList).then((res) => {
+      if (res) {
+        ElMessage({
+          type: "success",
+          message: "删除成功",
+        });
+        flushTable();
+      } else {
+        ElMessage.error("删除失败，请联系后端人员");
+      }
+    });
+  }).catch(() => {
+  });
 };
 
 const searchClick = () => {
@@ -364,23 +385,7 @@ const searchClick = () => {
   if (keyword.value != null && /^\s+$/.test(keyword.value)) {
     keyword.value = null;
   }
-  getBookList(
-      page.value,
-      pageSize.value,
-      keyword.value,
-      getBookTypeId(selectKey.value)
-  ).then((res) => {
-    if (res == null || res.code != 200) {
-      ElMessage.error("信息获取失败");
-    } else {
-      total.value = res.data.total;
-      pageList.value = res.data.list;
-      pageList.value.forEach((item) => {
-        item.time = item.time.replace("T", " ");
-      });
-      tableData.value = pageList.value;
-    }
-  });
+  flushTable();
 };
 
 const roleType = ref(2);
@@ -392,7 +397,7 @@ getRoleByUid(userId).then(res => {
     return;
   }
   roleType.value = res.data;
-})
+});
 
 const borrowClick = () => {
   if (list.value.length > 1) {
@@ -404,16 +409,31 @@ const borrowClick = () => {
     return;
   }
   ElMessageBox.confirm(
-      '确定借阅吗？',
-      '提示',
+      "确定借阅吗？",
+      "提示",
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      },
   ).then(() => {
+    let bookId = null;
+    list.value.forEach((value, index) => {
+      bookId = value.id;
+    });
+    borrow(bookId).then((res) => {
+      if (res == null) {
+        ElMessage.error("借阅失败");
+      } else ElMessage({
+        message: "借阅成功",
+        type: "success",
+        plain: true,
+      });
+      flushTable();
+    });
 
-  }).catch(() => {})
+  }).catch(() => {
+  });
 };
 
 // setInterval(() => {

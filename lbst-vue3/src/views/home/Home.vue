@@ -1,11 +1,11 @@
 <script setup>
-import { ElMessage, ElMessageBox, genFileId } from "element-plus";
-import { logout } from "../../api/loginApi.js";
-import { ref } from "vue";
+import {ElMessage, ElMessageBox, genFileId} from "element-plus";
+import {logout} from "../../api/loginApi.js";
+import {ref} from "vue";
 import router from "../../router.js";
-import { getUserInfo, getHeadImgUrl } from "../../api/personApi.js";
-import { getBaseUrl, getHeaders } from "../../utils/base.js";
-import { getRoleByUid } from "../../api/userApi.js";
+import {getHeadImgUrl, getUserInfo} from "../../api/personApi.js";
+import {getBaseUrl, getHeaders} from "../../utils/base.js";
+import {getRoleByUid} from "../../api/userApi.js";
 
 const asideWidth = ref(250);
 
@@ -21,14 +21,14 @@ const logoutClick = () => {
       message: `注销成功`,
     });
     logout()
-      .then(() => {
-        console.log("hello world");
-        console.log(localStorage);
-        localStorage.clear();
-      })
-      .catch((e) => {
-        console.log("error here");
-      });
+        .then(() => {
+          console.log("hello world");
+          console.log(localStorage);
+          localStorage.clear();
+        })
+        .catch((e) => {
+          console.log("error here");
+        });
   });
 };
 
@@ -74,12 +74,12 @@ const asideTag = [
         icon: "Suitcase",
         pathName: "borrow",
       },
-      {
-        name: "购买记录",
-        role: 2,
-        icon: "ShoppingTrolley",
-        pathName: "shop",
-      },
+      // {
+      //   name: "购买记录",
+      //   role: 2,
+      //   icon: "ShoppingTrolley",
+      //   pathName: "shop",
+      // },
     ],
   },
   {
@@ -111,12 +111,12 @@ const asideTag = [
         icon: "Edit",
         pathName: "operation-log",
       },
-      {
-        name: "错误日志",
-        role: 1,
-        icon: "CircleClose",
-        pathName: "wrong-log",
-      },
+      // {
+      //   name: "错误日志",
+      //   role: 1,
+      //   icon: "CircleClose",
+      //   pathName: "wrong-log",
+      // },
     ],
   },
 ];
@@ -125,7 +125,7 @@ const tabDom = ref();
 
 const tabClick = (pathName, event) => {
   if (!pathName) return;
-  router.push({ name: pathName });
+  router.push({name: pathName});
   const dom = event.currentTarget;
   let focusClass = "item-focus";
   if (tabDom.value) {
@@ -140,22 +140,22 @@ const headImgUrl = ref(null);
 const updateHeadImgUrl = async () => {
   const userId = localStorage.getItem("userId");
   await getUserInfo(userId)
-    .then((resp) => resp.data)
-    .then((data) => {
-      if (data.data && data.data.headImg) {
-        const headImgName = data.data.headImg;
-        getHeadImgUrl(headImgName)
-          .then((url) => {
-            headImgUrl.value = url;
-          })
-          .catch((e) => {
-            headImgUrl.value = null;
-            console.log("获取头像失败！");
-          });
-      } else {
-        headImgUrl.value = null;
-      }
-    });
+      .then((resp) => resp.data)
+      .then((data) => {
+        if (data.data && data.data.headImg) {
+          const headImgName = data.data.headImg;
+          getHeadImgUrl(headImgName)
+              .then((url) => {
+                headImgUrl.value = url;
+              })
+              .catch((e) => {
+                headImgUrl.value = null;
+                console.log("获取头像失败！");
+              });
+        } else {
+          headImgUrl.value = null;
+        }
+      });
 };
 
 updateHeadImgUrl();
@@ -195,28 +195,28 @@ const uploadExceed = (files) => {
           <el-collapse v-model="activeNames" @change="handleChange">
             <template v-for="(item, index) in asideTag" :key="index">
               <el-collapse-item
-                :name="index"
-                v-if="
+                  :name="index"
+                  v-if="
                   item.role >= role && item.children && item.children.length > 0
                 "
               >
                 <template #title>
                   <div class="aside-title-icon">
                     <el-icon>
-                      <component :is="item.icon" />
+                      <component :is="item.icon"/>
                     </el-icon>
                   </div>
                   {{ item.name }}
                 </template>
                 <template v-for="(iitem, index) in item.children" :key="index">
                   <div
-                    class="item over-mouse-hand"
-                    v-if="iitem.role && iitem.role >= role"
-                    @click.stop="tabClick(iitem.pathName, $event)"
+                      class="item over-mouse-hand"
+                      v-if="iitem.role && iitem.role >= role"
+                      @click.stop="tabClick(iitem.pathName, $event)"
                   >
                     <div class="item-icon">
                       <el-icon>
-                        <component :is="iitem.icon" />
+                        <component :is="iitem.icon"/>
                       </el-icon>
                     </div>
                     <div>{{ iitem.name }}</div>
@@ -224,13 +224,13 @@ const uploadExceed = (files) => {
                 </template>
               </el-collapse-item>
               <div
-                class="empty-collapse over-mouse-hand"
-                v-else-if="item.role >= role"
-                @click.stop="tabClick(item.pathName, $event)"
+                  class="empty-collapse over-mouse-hand"
+                  v-else-if="item.role >= role"
+                  @click.stop="tabClick(item.pathName, $event)"
               >
                 <div class="aside-title-icon">
                   <el-icon>
-                    <component :is="item.icon" />
+                    <component :is="item.icon"/>
                   </el-icon>
                 </div>
                 {{ item.name }}
@@ -243,11 +243,11 @@ const uploadExceed = (files) => {
         <el-header style="height: 48px">
           <div class="header">
             <div
-              @click="asideWidth = (asideWidth + 250) % 500"
-              class="header-title"
+                @click="asideWidth = (asideWidth + 250) % 500"
+                class="header-title"
             >
               <el-icon style="font-size: 23px; margin-right: 6px">
-                <Menu />
+                <Menu/>
               </el-icon>
               <span style="font-size: 18px">图书管理系统</span>
             </div>
@@ -257,28 +257,29 @@ const uploadExceed = (files) => {
             <el-dropdown class="head-icon">
               <span class="head-icon-img">
                 <el-avatar v-if="!headImgUrl">user</el-avatar>
-                <el-avatar :src="headImgUrl" v-else />
+                <el-avatar :src="headImgUrl" v-else/>
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item>
                     <el-upload
-                      ref="upload"
-                      class="w-full h-full"
-                      :action="getHeadImgUploadUrl()"
-                      :headers="getHeaders()"
-                      :multiple="false"
-                      :show-file-list="false"
-                      :limit="1"
-                      :on-success="uploadSuccess"
-                      :on-error="uploadError"
-                      :on-exceed="uploadExceed"
+                        ref="upload"
+                        class="w-full h-full"
+                        :action="getHeadImgUploadUrl()"
+                        :headers="getHeaders()"
+                        :multiple="false"
+                        :show-file-list="false"
+                        :limit="1"
+                        :on-success="uploadSuccess"
+                        :on-error="uploadError"
+                        :on-exceed="uploadExceed"
                     >
                       上传头像
                     </el-upload>
                   </el-dropdown-item>
                   <el-dropdown-item @click="logoutClick"
-                    >注销登录</el-dropdown-item
+                  >注销登录
+                  </el-dropdown-item
                   >
                 </el-dropdown-menu>
               </template>
@@ -286,7 +287,7 @@ const uploadExceed = (files) => {
           </div>
         </el-header>
         <el-main>
-          <router-view />
+          <router-view/>
         </el-main>
       </el-container>
     </el-container>

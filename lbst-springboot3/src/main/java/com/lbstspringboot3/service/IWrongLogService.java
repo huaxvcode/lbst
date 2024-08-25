@@ -1,11 +1,13 @@
 package com.lbstspringboot3.service;
 
-import com.lbstspringboot3.entity.WrongLog;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lbstspringboot3.entity.WrongLog;
+
+import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author 林日清
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IWrongLogService extends IService<WrongLog> {
 
+	List<WrongLog> getErrorLogList(Integer pageNum, Integer pageSize);
 }

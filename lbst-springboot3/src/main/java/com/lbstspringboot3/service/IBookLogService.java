@@ -1,11 +1,14 @@
 package com.lbstspringboot3.service;
 
-import com.lbstspringboot3.entity.BookLog;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lbstspringboot3.entity.BookLog;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author 林日清
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IBookLogService extends IService<BookLog> {
 
+	List<Map<String, Object>> getBookLogList(Integer pageNum, Integer pageSize);
+
+	void saveBookLog(Integer uid, Integer bookId, String content);
 }

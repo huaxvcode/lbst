@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author 林日清
@@ -17,15 +17,28 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RoleServiceImpl
-    extends ServiceImpl<RoleMapper, Role> implements IRoleService {
+		extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
-  @Override
-  public Integer getRoleByUid(Integer uid) {
-    LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(Role::getUid, uid);
-    Role role = this.getOne(wrapper);
-    if (role == null)
-      return 2;
-    return role.getType();
-  }
+	@Override
+	public Integer getRoleByUid(Integer uid) {
+		LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+		wrapper.eq(Role::getUid, uid);
+		Role role = this.getOne(wrapper);
+		if (role == null)
+			return 2;
+		return role.getType();
+	}
+
+	@Override
+	public Boolean setRoleType(Integer uid, Integer type) {
+		LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+		wrapper.eq(Role::getUid, uid);
+		Role role = this.getOne(wrapper);
+		if (role == null) {
+			role = new Role();
+			role.setUid(uid);
+		}
+		role.setType(type);
+		return this.saveOrUpdate(role);
+	}
 }

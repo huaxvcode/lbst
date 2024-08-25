@@ -1,11 +1,14 @@
 package com.lbstspringboot3.mapper;
 
-import com.lbstspringboot3.entity.UserBookInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lbstspringboot3.entity.UserBookInfo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author 林日清
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserBookInfoMapper extends BaseMapper<UserBookInfo> {
 
+	List<Map<String, Object>> getBorrowListByUid(Integer uid);
 }

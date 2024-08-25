@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lbstspringboot3.mapper.OpLogMapper">
-
+    <select id="getOpLogList" resultType="map">
+        select a.id,
+               a.ip,
+               a.time,
+               a.uid,
+               a.content,
+               b.username
+        from op_log as a
+                 inner join user as b on a.uid = b.id
+        order by a.time desc
+    </select>
 </mapper>

@@ -6,7 +6,9 @@
 spring:
   application:
     name: lbst-springboot3
-
+  profiles:
+    active: dev
+  
   servlet:
     multipart:
       max-file-size: 100MB     # 设置上传的最大大小
@@ -16,8 +18,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/lbst?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    password: ${lbst.mysql.pwd}
+    url: jdbc:mysql://${lbst.mysql.network}:3306/lbst?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
 
 server:
   port: 8090

@@ -1,0 +1,5 @@
+lbst:
+  mysql:
+    pwd: 123456
+    network: localhost
+  imgPath: C:\Users\i64coder\Documents\lbst\lbst-springboot3\head_img
